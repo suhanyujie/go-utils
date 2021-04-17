@@ -12,6 +12,8 @@ type Context struct {
 	Path       string
 	Method     string
 	StatusCode int
+	// 存储路由中的参数
+	Params map[string]string
 }
 
 func newContext(w http.ResponseWriter, req *http.Request) *Context {
@@ -64,4 +66,8 @@ func (c *Context) Html(code int, html string) {
 	c.SetHeader("Content-Type", "text/html")
 	c.Status(code)
 	c.Writer.Write([]byte(html))
+}
+
+func (c *Context) SetParam(key, value string) {
+	c.Params[key] = value
 }
