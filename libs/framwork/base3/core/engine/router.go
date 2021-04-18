@@ -64,11 +64,11 @@ func (r *router) Post(pattern string, handler HandlerFunc) {
 }
 
 func (r *router) handle(c *Context) {
-	key := c.Method + "-" + c.Path
 	node, params := r.getRoute(c.Method, c.Path)
 	if node == nil {
 		c.String(http.StatusNotFound, "404 NOT FOUND: %s\n", c.Path)
 	} else {
+		key := c.Method + "-" + node.pattern
 		c.Params = params
 		if handler, ok := r.handlers[key]; ok {
 			handler(c)

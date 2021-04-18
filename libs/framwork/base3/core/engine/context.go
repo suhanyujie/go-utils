@@ -71,3 +71,8 @@ func (c *Context) Html(code int, html string) {
 func (c *Context) SetParam(key, value string) {
 	c.Params[key] = value
 }
+
+func (c *Context) GetParam(key string) string {
+	v, _ := c.Params[key]
+	return v
+}

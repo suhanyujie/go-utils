@@ -25,3 +25,11 @@ func (e *Engine) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	c := newContext(w, req)
 	e.router.handle(c)
 }
+
+func (e *Engine) Get(pattern string, handler HandlerFunc) {
+	e.router.Get(pattern, handler)
+}
+
+func (e *Engine) Post(pattern string, handler HandlerFunc) {
+	e.router.Post(pattern, handler)
+}
