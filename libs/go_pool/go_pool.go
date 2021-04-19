@@ -10,6 +10,9 @@ type GoPool struct {
 }
 
 func NewGoPool(poolSize int) *GoPool {
+	if poolSize < 1 {
+		panic("goroutine pool size must bigger than 0. ")
+	}
 	return &GoPool{
 		work: make(chan func()),
 		num:  make(chan struct{}, poolSize),
