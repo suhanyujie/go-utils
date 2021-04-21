@@ -36,3 +36,27 @@ func TestPoolRun1(t *testing.T) {
 	wg.Wait()
 	fmt.Printf("time consume: %.3f\n", time.Since(t1).Seconds())
 }
+
+func TestPoolRun2(t *testing.T) {
+	t1 := time.Now()
+	wg := sync.WaitGroup{}
+	// 等待 3 个任务执行。
+	wg.Add(3)
+	pool := NewGoPool(2)
+	for i := 0; i < 3; i++ {
+		RunOne(pool, i, &wg)
+		fmt.Printf("loop %d\n", i)
+	}
+	// 等待所有任务执行完毕
+	wg.Wait()
+	fmt.Printf("time consume: %.3f\n", time.Since(t1).Seconds())
+}
+
+func RunOne(pool *GoPool, val int, wg *sync.WaitGroup) {
+	pool.NewTask(func() {
+		fmt.Printf("task %d is executing...\n", val)
+		time.Sleep(time.Second * 3)
+		fmt.Printf("task %d is finished.\n", val)
+		wg.Done()
+	})
+}
