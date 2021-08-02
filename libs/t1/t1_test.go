@@ -2,13 +2,15 @@ package t1
 
 import (
 	"errors"
+	"github.com/suhanyujie/go-utils/helper/mystring"
+	"github.com/suhanyujie/go-utils/libs/jsonx"
 	"strings"
 	"testing"
 )
 
 func TestLastIndex(t *testing.T) {
 	op := "xxx.xxxConfig.Create"
-	prev := Substr(op, 0, strings.LastIndex(op, "."))
+	prev := mystring.Substr(op, 0, strings.LastIndex(op, "."))
 	if prev != "xxx.xxxConfig" {
 		t.Error(errors.New("error 001"))
 		return
@@ -18,7 +20,7 @@ func TestLastIndex(t *testing.T) {
 
 func TestLastIndex1(t *testing.T) {
 	op := "xxx.xxxConfig.Create"
-	suffix := Substr(op, strings.LastIndex(op, ".") + 1, len(op))
+	suffix := mystring.Substr(op, strings.LastIndex(op, ".") + 1, len(op))
 	if suffix != "Create" {
 		t.Error(errors.New("error 001"))
 		return
@@ -26,33 +28,13 @@ func TestLastIndex1(t *testing.T) {
 	t.Log("end...")
 }
 
-//start：正数 - 在字符串的指定位置开始,超出字符串长度强制把start变为字符串长度
-//       负数 - 在从字符串结尾的指定位置开始
-//       0 - 在字符串中的第一个字符处开始
-//length:正数 - 从 start 参数所在的位置返回
-//       负数 - 从字符串末端返回
-func Substr(str string, start, length int) string {
-	if length == 0 {
-		return ""
-	}
-	runeStr := []rune(str)
-	len_str := len(runeStr)
+type UserIdsObj struct {
+	UserIds []int64 `json:"userIds"`
+}
 
-	if start < 0 {
-		start = len_str + start
-	}
-	if start > len_str {
-		start = len_str
-	}
-	end := start + length
-	if end > len_str {
-		end = len_str
-	}
-	if length < 0 {
-		end = len_str + length
-	}
-	if start > end {
-		start, end = end, start
-	}
-	return string(runeStr[start:end])
+func TestIfJson(t *testing.T) {
+	a := []int64{1145,2,3, 24335}
+	j1 := jsonx.ToJsonIgnore(a)
+	t.Log(j1)
+	t.Log("---end...")
 }
