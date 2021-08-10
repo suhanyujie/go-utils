@@ -88,3 +88,17 @@ func TestFormat1(t *testing.T) {
 	f1, _ = decimal.NewFromFloat(fNum).Div(decimal.NewFromFloat(float64(coefficientNum))).RoundBank(int32(accuracyNum)).Float64()
 	fmt.Printf("%v, %v", fNum, f1)
 }
+
+// 空切片和 nil
+func TestNilSlice1(t *testing.T) {
+	s1 := make([]int, 0)
+	if len(s1) != 0 && s1 == nil {
+		t.Error("error for s1")
+		return
+	}
+	s1 = nil
+	if len(s1) != 0 {
+		t.Error("error for s1-1")
+		return
+	}
+}
