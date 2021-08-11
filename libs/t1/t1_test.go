@@ -102,3 +102,32 @@ func TestNilSlice1(t *testing.T) {
 		return
 	}
 }
+
+type OneOp1 struct {
+	Id    interface{} `json:"id"`
+	Color string      `json:"color"`
+	Value string      `json:"value"`
+}
+
+func TestUnmarshal1(t *testing.T) {
+	cellVal := float64(3)
+	json1 := `[{"color": "", "id": 3, "value": "老板1"},{"color": "", "id": "123", "value": "老板2"}]`
+	obj1 := make([]OneOp1, 0)
+	jsonx.FromJson(json1, &obj1)
+	map1 := GetOpList(obj1)
+
+	if res1, ok := map1[cellVal]; ok {
+		t.Log(jsonx.ToJsonIgnore(res1))
+		return
+	}
+	fmt.Printf("res: %v\n", obj1[0].Id.(float64)==3)
+	fmt.Println(jsonx.ToJsonIgnore(obj1))
+}
+
+func GetOpList(ops []OneOp1) map[interface{}]OneOp1 {
+	map1 := make(map[interface{}]OneOp1, 0)
+	for _, op := range ops {
+		map1[op.Id] = op
+	}
+	return map1
+}
