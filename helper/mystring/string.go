@@ -1,5 +1,10 @@
 package mystring
 
+import (
+	"strings"
+	"unicode"
+)
+
 // StringInArray 元素为 string 的 slice 版本的 InArray 函数
 func StringInArray(needle string, strSlice []string) bool {
 	hasFound := false
@@ -45,5 +50,20 @@ func Substr(str string, start, length int) string {
 		start, end = end, start
 	}
 	return string(runeStr[start:end])
+}
+
+// Case2Camel 下划线风格的字符串转换为小驼峰风格
+func Case2Camel(name string) string {
+	name = strings.Replace(name, "_", " ", -1)
+	name = strings.Title(name)
+	return strings.Replace(name, " ", "", -1)
+}
+
+// 首字母小写
+func LcFirst(str string) string {
+	for i, v := range str {
+		return string(unicode.ToLower(v)) + str[i+1:]
+	}
+	return ""
 }
 

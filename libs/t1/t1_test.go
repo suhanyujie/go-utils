@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/shopspring/decimal"
+	"github.com/suhanyujie/go-utils/helper/mymap"
 	"github.com/suhanyujie/go-utils/helper/mystring"
 	"github.com/suhanyujie/go-utils/helper/slicex"
 	"github.com/suhanyujie/go-utils/libs/jsonx"
@@ -130,4 +131,11 @@ func GetOpList(ops []OneOp1) map[interface{}]OneOp1 {
 		map1[op.Id] = op
 	}
 	return map1
+}
+
+func TestCaseCamelCopy(t *testing.T) {
+	res := mymap.CaseCamelCopy(map[string]interface{}{
+		"issue_status": 1,
+	})
+	t.Log(res)
 }
