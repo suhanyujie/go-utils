@@ -139,3 +139,19 @@ func TestCaseCamelCopy(t *testing.T) {
 	})
 	t.Log(res)
 }
+
+type Issue struct {
+	Title string
+	LcData map[string]interface{}
+}
+
+// 当 map 为 nil 时，直接赋值是会报 panic 的
+func TestNilMap1(t *testing.T) {
+	issue1 := Issue{
+		Title: "t1",
+	}
+	if issue1.LcData == nil {
+		issue1.LcData = make(map[string]interface{}, 0)
+	}
+	issue1.LcData["title"] = issue1.Title
+}
