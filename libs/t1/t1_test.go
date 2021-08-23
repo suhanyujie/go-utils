@@ -28,7 +28,7 @@ func TestLastIndex(t *testing.T) {
 
 func TestLastIndex1(t *testing.T) {
 	op := "xxx.xxxConfig.Create"
-	suffix := mystring.Substr(op, strings.LastIndex(op, ".") + 1, len(op))
+	suffix := mystring.Substr(op, strings.LastIndex(op, ".")+1, len(op))
 	if suffix != "Create" {
 		t.Error(errors.New("error 001"))
 		return
@@ -41,7 +41,7 @@ type UserIdsObj struct {
 }
 
 func TestIfJson(t *testing.T) {
-	a := []int64{1145,2,3, 24335}
+	a := []int64{1145, 2, 3, 24335}
 	j1 := jsonx.ToJsonIgnore(a)
 	t.Log(j1)
 	t.Log("---end...")
@@ -121,7 +121,7 @@ func TestUnmarshal1(t *testing.T) {
 		t.Log(jsonx.ToJsonIgnore(res1))
 		return
 	}
-	fmt.Printf("res: %v\n", obj1[0].Id.(float64)==3)
+	fmt.Printf("res: %v\n", obj1[0].Id.(float64) == 3)
 	fmt.Println(jsonx.ToJsonIgnore(obj1))
 }
 
@@ -141,7 +141,7 @@ func TestCaseCamelCopy(t *testing.T) {
 }
 
 type Issue struct {
-	Title string
+	Title  string
 	LcData map[string]interface{}
 }
 
@@ -154,4 +154,21 @@ func TestNilMap1(t *testing.T) {
 		issue1.LcData = make(map[string]interface{}, 0)
 	}
 	issue1.LcData["title"] = issue1.Title
+}
+
+func TestMapAndAssert(t *testing.T) {
+	m1 := make(map[string]interface{}, 0)
+	m1["orgIds"] = []int64{1102}
+	// 如果 key 不存在，也不会发生 panic
+	tmpData, isOk := m1["orgIds"].([]int64)
+	if isOk {
+		t.Log(jsonx.ToJsonIgnore(tmpData))
+	} else {
+		t.Log("no key data")
+	}
+	// 如果 key 不存在，获取到的就是 `nil`
+	d2 := m1["userName"]
+	d3, isOk := m1["userName"]
+	t.Log(jsonx.ToJsonIgnore(d2))
+	t.Log(d3, isOk)
 }
