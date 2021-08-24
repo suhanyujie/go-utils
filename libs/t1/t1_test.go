@@ -172,3 +172,20 @@ func TestMapAndAssert(t *testing.T) {
 	t.Log(jsonx.ToJsonIgnore(d2))
 	t.Log(d3, isOk)
 }
+
+func TestSubStr1(t *testing.T) {
+	prev := ""
+	opCode := "Permission.Pro.View-ManagePrivate"
+	opCode = "Permission.Pro.View.ManagePrivate"
+	opCode = "Permission.Pro.Issue.4-Modify"
+	opCode = "Permission.Pro.Issue.4.Modify"
+	if strings.IndexAny(opCode, "-") != -1 {
+		info := strings.Split(opCode, "-")
+		if len(info) > 0 {
+			prev = info[0]
+		}
+	} else {
+		prev = mystring.Substr(opCode, 0, strings.LastIndex(opCode, "."))
+	}
+	t.Log(prev)
+}
