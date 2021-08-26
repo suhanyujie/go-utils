@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/shopspring/decimal"
+	"github.com/suhanyujie/go-utils/helper/copyer"
 	"github.com/suhanyujie/go-utils/helper/mymap"
 	"github.com/suhanyujie/go-utils/helper/mystring"
 	"github.com/suhanyujie/go-utils/helper/slicex"
@@ -42,7 +43,7 @@ type UserIdsObj struct {
 
 func TestIfJson(t *testing.T) {
 	a := []int64{1145, 2, 3, 24335}
-	j1 := jsonx.ToJsonIgnore(a)
+	j1 := jsonx.ToJsonIgnoreErr(a)
 	t.Log(j1)
 	t.Log("---end...")
 }
@@ -118,11 +119,11 @@ func TestUnmarshal1(t *testing.T) {
 	map1 := GetOpList(obj1)
 
 	if res1, ok := map1[cellVal]; ok {
-		t.Log(jsonx.ToJsonIgnore(res1))
+		t.Log(jsonx.ToJsonIgnoreErr(res1))
 		return
 	}
 	fmt.Printf("res: %v\n", obj1[0].Id.(float64) == 3)
-	fmt.Println(jsonx.ToJsonIgnore(obj1))
+	fmt.Println(jsonx.ToJsonIgnoreErr(obj1))
 }
 
 func GetOpList(ops []OneOp1) map[interface{}]OneOp1 {
@@ -162,14 +163,14 @@ func TestMapAndAssert(t *testing.T) {
 	// 如果 key 不存在，也不会发生 panic
 	tmpData, isOk := m1["orgIds"].([]int64)
 	if isOk {
-		t.Log(jsonx.ToJsonIgnore(tmpData))
+		t.Log(jsonx.ToJsonIgnoreErr(tmpData))
 	} else {
 		t.Log("no key data")
 	}
 	// 如果 key 不存在，获取到的就是 `nil`
 	d2 := m1["userName"]
 	d3, isOk := m1["userName"]
-	t.Log(jsonx.ToJsonIgnore(d2))
+	t.Log(jsonx.ToJsonIgnoreErr(d2))
 	t.Log(d3, isOk)
 }
 
@@ -188,4 +189,20 @@ func TestSubStr1(t *testing.T) {
 		prev = mystring.Substr(opCode, 0, strings.LastIndex(opCode, "."))
 	}
 	t.Log(prev)
+}
+
+type TestObjConvert1Type1 struct {
+	Num1 int `json:"int64"`
+}
+
+type TestObjConvert1Type2 struct {
+	Num1 int `json:"int"`
+}
+
+// 不同类型的 field，是无法正常转换的。如 int 和 int64 是不同类型。
+func TestObjConvert1(t *testing.T) {
+	o1 := TestObjConvert1Type1{Num1: 1}
+	dstO1 := TestObjConvert1Type2{}
+	copyer.Copy(o1, &dstO1)
+	t.Log(jsonx.ToJsonIgnoreErr(dstO1))
 }

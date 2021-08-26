@@ -8,8 +8,8 @@ func ToJson(obj interface{}) (string, error) {
 	return string(v), err
 }
 
-// ToJsonIgnore 将对象转换为 json 字符串，发生异常时会被忽略
-func ToJsonIgnore(obj interface{}) string {
+// ToJsonIgnoreErr 将对象转换为 json 字符串，发生异常时会被忽略
+func ToJsonIgnoreErr(obj interface{}) string {
 	v, _ := json.Marshal(obj)
 	return string(v)
 }
@@ -18,4 +18,3 @@ func ToJsonIgnore(obj interface{}) string {
 func FromJson(jsonStr string, obj interface{}) error {
 	return json.Unmarshal([]byte(jsonStr), obj)
 }
-

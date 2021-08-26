@@ -9,7 +9,7 @@ func TestToJson(t *testing.T) {
 		Name string `json:"name"`
 		Age  int    `json:"age"`
 	}
-	json := ToJsonIgnore(Stu{
+	json := ToJsonIgnoreErr(Stu{
 		Name: "李LiuDeHua",
 		Age:  21,
 	})
