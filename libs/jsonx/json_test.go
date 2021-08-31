@@ -15,3 +15,19 @@ func TestToJson(t *testing.T) {
 	})
 	t.Log(json)
 }
+
+func TestFromJsonWithNumber(t *testing.T) {
+	json1 := `[9819899]`
+	arr := make([]int64, 0)
+	err := FromJsonWithNumber(json1, &arr)
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	resStr := ToJsonIgnoreErr(arr)
+	if json1 != resStr {
+		t.Error("error convert 001")
+		return
+	}
+	t.Log(resStr)
+}

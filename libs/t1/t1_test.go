@@ -206,3 +206,14 @@ func TestObjConvert1(t *testing.T) {
 	copyer.Copy(o1, &dstO1)
 	t.Log(jsonx.ToJsonIgnoreErr(dstO1))
 }
+
+func TestIntJson1(t *testing.T) {
+	json1 := "[997639]"
+	arr := make([]int64, 0)
+	err := jsonx.FromJson(json1, &arr)
+	if err != nil {
+		t.Log(err)
+		return
+	}
+	t.Log(jsonx.ToJsonIgnoreErr(arr))
+}
