@@ -217,3 +217,16 @@ func TestIntJson1(t *testing.T) {
 	}
 	t.Log(jsonx.ToJsonIgnoreErr(arr))
 }
+
+func TestJsonToInterface1(t *testing.T) {
+	map1 := map[string]interface{}{
+		"userAge": 18,
+	}
+	json1 := jsonx.ToJsonIgnoreErr(map1)
+	map2 := make(map[string]interface{}, 0)
+	jsonx.FromJson(json1, &map2)
+	age, ok1 := map2["userAge"]
+	// age1 := age.(int) // bad
+	age1 := int(age.(float64)) // ok
+	t.Log(age, ok1, age1)
+}
