@@ -234,7 +234,29 @@ func TestJsonToInterface1(t *testing.T) {
 // int64 string 混合的数组的转换
 func TestJsonToArr1(t *testing.T) {
 	json1 := `["24362", 24422, 1007]`
-	arr := make([]interface{}, 0)
-	jsonx.FromJsonWithNumber(json1, &arr)
+	arr := make([]int64, 0)
+	jsonx.FromJsonWithNumber(json1, &arr) // bad case
 	t.Log(jsonx.ToJsonIgnoreErr(arr))
+	// good:
+	arr2 := make([]interface{}, 0)
+	jsonx.FromJson(json1, &arr2)
+	arr2Int64 := make([]int64, 0)
+	for _, item := range arr2 {
+		if val, ok1 := item.(string); ok1 {
+			tmpUid, err := strconv.ParseInt(val, 10, 64)
+			if err != nil {
+				// handle error
+				continue
+			}
+			arr2Int64 = append(arr2Int64, tmpUid)
+		} else if val, ok2 := item.(float64); ok2 {
+			tmpUid := int64(val)
+			arr2Int64 = append(arr2Int64, tmpUid)
+		} else if val, ok2 := item.(int64); ok2 {
+			arr2Int64 = append(arr2Int64, val)
+		} else {
+			// handle error
+		}
+	}
+	t.Log(jsonx.ToJsonIgnoreErr(arr2Int64))
 }
