@@ -230,3 +230,11 @@ func TestJsonToInterface1(t *testing.T) {
 	age1 := int(age.(float64)) // ok
 	t.Log(age, ok1, age1)
 }
+
+// int64 string 混合的数组的转换
+func TestJsonToArr1(t *testing.T) {
+	json1 := `["24362", 24422, 1007]`
+	arr := make([]interface{}, 0)
+	jsonx.FromJsonWithNumber(json1, &arr)
+	t.Log(jsonx.ToJsonIgnoreErr(arr))
+}
