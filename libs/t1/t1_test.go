@@ -260,3 +260,15 @@ func TestJsonToArr1(t *testing.T) {
 	}
 	t.Log(jsonx.ToJsonIgnoreErr(arr2Int64))
 }
+
+// slice 的 contain 方法，如果查询的元素类型合列表元素类型不一样会怎样呢？尤其是不一样的不明显。
+func TestSliceContainAboutType1(t *testing.T) {
+	arr1 := []int64{1, 2, 3, 0}
+	// 这里的 0 是 int 型，和切片中的元素 int64 类型不一样，因此结果可能会不符合预期。
+	// if hasIt, _ := slicex.Contain(arr1, 0); hasIt {
+	if hasIt, _ := slicex.Contain(arr1, int64(0)); hasIt {
+		t.Log("hasIt1")
+		return
+	}
+	t.Log("end1...")
+}
