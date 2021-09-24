@@ -272,3 +272,15 @@ func TestSliceContainAboutType1(t *testing.T) {
 	}
 	t.Log("end1...")
 }
+
+func TestScript1(t *testing.T) {
+	allArr := []int64{25182, 25183, 25184, 25185, 25186, 25187, 25188, 25189, 21417, 25172, 25190, 25191, 25192, 25193, 25194, 25195}
+	existArr := []int64{999, 2096, 2170, 2320, 2341, 2460, 2468, 2488, 2558, 2561, 2578, 2815, 2948, 3177, 3295, 3464, 3504, 3578, 3613}
+	needAddIds := make([]int64, 0)
+	for _, item := range allArr {
+		if hasIt, _ := slicex.Contain(existArr, item); !hasIt {
+			needAddIds = append(needAddIds, item)
+		}
+	}
+	t.Log(jsonx.ToJsonIgnoreErr(needAddIds))
+}
