@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/shopspring/decimal"
 	"github.com/suhanyujie/go-utils/helper/copyer"
+	"github.com/suhanyujie/go-utils/helper/format"
 	"github.com/suhanyujie/go-utils/helper/mymap"
 	"github.com/suhanyujie/go-utils/helper/mystring"
 	"github.com/suhanyujie/go-utils/helper/slicex"
@@ -89,6 +90,11 @@ func TestFormat1(t *testing.T) {
 	fNum = math.Floor(fNum)
 	f1, _ = decimal.NewFromFloat(fNum).Div(decimal.NewFromFloat(float64(coefficientNum))).RoundBank(int32(accuracyNum)).Float64()
 	fmt.Printf("%v, %v", fNum, f1)
+}
+
+func TestFormat2(t *testing.T) {
+	res := format.Round(1.99816, 4)
+	t.Log(res)
 }
 
 // 空切片和 nil
@@ -283,4 +289,10 @@ func TestScript1(t *testing.T) {
 		}
 	}
 	t.Log(jsonx.ToJsonIgnoreErr(needAddIds))
+}
+
+func TestArrayUnique(t *testing.T) {
+	idArr := []int64{25257, 24812, 24812, 24812, 24812, 23781, 23209, 23209, 23209, 22411, 22411, 18458, 18458, 18458, 18458, 18458, 16317, 14396, 14396, 14396, 14396, 14396, 14396, 8551, 8055, 8055, 4283, 4283, 4283, 2561, 2561, 2468, 1821, 1821, 1821}
+	idArr = slicex.ArrayUnique(idArr)
+	t.Log(jsonx.ToJsonIgnoreErr(idArr))
 }
