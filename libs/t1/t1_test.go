@@ -13,6 +13,7 @@ import (
 	"golang.org/x/text/language"
 	"golang.org/x/text/message"
 	"math"
+	"reflect"
 	"strconv"
 	"strings"
 	"testing"
@@ -295,4 +296,11 @@ func TestArrayUnique(t *testing.T) {
 	idArr := []int64{25257, 24812, 24812, 24812, 24812, 23781, 23209, 23209, 23209, 22411, 22411, 18458, 18458, 18458, 18458, 18458, 16317, 14396, 14396, 14396, 14396, 14396, 14396, 8551, 8055, 8055, 4283, 4283, 4283, 2561, 2561, 2468, 1821, 1821, 1821}
 	idArr = slicex.ArrayUnique(idArr)
 	t.Log(jsonx.ToJsonIgnoreErr(idArr))
+}
+
+func TestReflectType(t *testing.T) {
+	var t1 interface{}
+	t1 = 11.1
+	getType := reflect.TypeOf(t1)
+	t.Log(getType.Kind() == reflect.Float64)
 }

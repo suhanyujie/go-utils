@@ -83,11 +83,21 @@ func Int64RemoveSomeVal(haystack, removeVals []int64) []int64 {
 	return result
 }
 
-// Int64Explode 将切片内容拼接成字符串
-func Int64Explode(list []int64, glue string) string {
-	strList := make([]string, 0)
-	for _, item := range list {
-		strList = append(strList, strconv.FormatInt(item, 10))
+// Int64Explode 将字符串切割成数组
+func Int64Explode(str string, glue string) []int64 {
+	strList := strings.Split(str, glue)
+	eleList := make([]int64, len(strList))
+	for i, item := range strList {
+		eleList[i], _ = strconv.ParseInt(strings.Trim(item, " "), 10, 64)
+	}
+	return eleList
+}
+
+// Int64Implode 将切片内容拼接成字符串
+func Int64Implode(list []int64, glue string) string {
+	strList := make([]string, len(list))
+	for i, item := range list {
+		strList[i] = strconv.FormatInt(item, 10)
 	}
 	return strings.Join(strList, glue)
 }
