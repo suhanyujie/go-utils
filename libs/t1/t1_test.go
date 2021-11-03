@@ -17,6 +17,7 @@ import (
 	"strconv"
 	"strings"
 	"testing"
+	"time"
 )
 
 func TestLastIndex(t *testing.T) {
@@ -303,4 +304,12 @@ func TestReflectType(t *testing.T) {
 	t1 = 11.1
 	getType := reflect.TypeOf(t1)
 	t.Log(getType.Kind() == reflect.Float64)
+}
+
+func TestTimeConsume1(t *testing.T) {
+	t1 := time.Now()
+	time.Sleep(1200 * time.Millisecond)
+	diff := time.Since(t1)
+	msg := fmt.Sprintf("部门统计人数,耗时记录 %.3f", diff.Seconds())
+	t.Log(msg)
 }
