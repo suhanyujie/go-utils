@@ -313,3 +313,12 @@ func TestTimeConsume1(t *testing.T) {
 	msg := fmt.Sprintf("部门统计人数,耗时记录 %.3f", diff.Seconds())
 	t.Log(msg)
 }
+
+// 两个时间间的间隔
+func TestDurationOfTwoTime(t *testing.T) {
+	createDateTime := time.Date(2021, 11, 10, 0, 0, 0, 0, time.Local)
+	nowDateTime := time.Date(2021, 11, 16, 0, 0, 0, 0, time.Local)
+	// 相隔的周数
+	idx := int(nowDateTime.Sub(createDateTime).Hours()/24/7) + 1
+	t.Log(idx)
+}
