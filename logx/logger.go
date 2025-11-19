@@ -88,7 +88,9 @@ func NewFromCustom() *Logx {
 		zapcore.NewCore(encoder, fileWriteSyncer, zapcore.DebugLevel),
 	)
 	logger := zap.New(core)
-	logger = logger.WithOptions(zap.Hooks(FsNoticeHook()))
+	if len(WebHookUrl) > 0 {
+		logger = logger.WithOptions(zap.Hooks(FsNoticeHook()))
+	}
 	ins := &Logx{
 		inner: logger,
 	}
@@ -118,7 +120,9 @@ func NewByRoom(rid uint64, dir string) *Logx {
 		zapcore.NewCore(encoder, fileWriteSyncer, zapcore.DebugLevel),
 	)
 	logger := zap.New(core)
-	logger = logger.WithOptions(zap.Hooks(FsNoticeHook()))
+	if len(WebHookUrl) > 0 {
+		logger = logger.WithOptions(zap.Hooks(FsNoticeHook()))
+	}
 	ins := &Logx{
 		inner: logger,
 	}
@@ -147,7 +151,9 @@ func NewLoggerForSys(dir string) *Logx {
 		zapcore.NewCore(encoder, fileWriteSyncer, zapcore.DebugLevel),
 	)
 	logger := zap.New(core)
-	logger = logger.WithOptions(zap.Hooks(FsNoticeHook()))
+	if len(WebHookUrl) > 0 {
+		logger = logger.WithOptions(zap.Hooks(FsNoticeHook()))
+	}
 	ins := &Logx{
 		inner: logger,
 	}
@@ -176,7 +182,9 @@ func NewLoggerByTag(dir string, tag string) *Logx {
 		zapcore.NewCore(encoder, fileWriteSyncer, zapcore.DebugLevel),
 	)
 	logger := zap.New(core)
-	logger = logger.WithOptions(zap.Hooks(FsNoticeHook()))
+	if len(WebHookUrl) > 0 {
+		logger = logger.WithOptions(zap.Hooks(FsNoticeHook()))
+	}
 	ins := &Logx{
 		inner: logger,
 	}
