@@ -1,29 +1,31 @@
 package jsonx
 
 import (
-	"encoding/json"
-	"strings"
+	"github.com/goccy/go-json"
 )
 
-// ToJson 将对象转换为 json 字符串
-func ToJson(obj interface{}) (string, error) {
-	v, err := json.Marshal(obj)
-	return string(v), err
+func ToJsonIgnoreErr(v interface{}) string {
+	bArr, _ := json.Marshal(v)
+	return string(bArr)
 }
 
-// ToJsonIgnoreErr 将对象转换为 json 字符串，发生异常时会被忽略
-func ToJsonIgnoreErr(obj interface{}) string {
-	v, _ := json.Marshal(obj)
-	return string(v)
+func ToJson(v interface{}) (string, error) {
+	bArr, err := json.Marshal(v)
+	if err != nil {
+		return "", err
+	}
+	return string(bArr), nil
 }
 
-// FromJson json 的反序列化
-func FromJson(jsonStr string, obj interface{}) error {
-	return json.Unmarshal([]byte(jsonStr), obj)
+func FromJson(jsonStr string, o interface{}) error {
+	err := json.Unmarshal([]byte(jsonStr), &o)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
-func FromJsonWithNumber(jsonStr string, obj interface{}) error {
-	d := json.NewDecoder(strings.NewReader(jsonStr))
-	d.UseNumber()
-	return d.Decode(&obj)
+func ToJsonFormatIgnoreErr(v interface{}) string {
+	bArr, _ := json.MarshalIndent(v, "", "    ")
+	return string(bArr)
 }

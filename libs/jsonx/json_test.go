@@ -19,7 +19,7 @@ func TestToJson(t *testing.T) {
 func TestFromJsonWithNumber(t *testing.T) {
 	json1 := `[9819899]`
 	arr := make([]int64, 0)
-	err := FromJsonWithNumber(json1, &arr)
+	err := FromJson(json1, &arr)
 	if err != nil {
 		t.Error(err)
 		return
