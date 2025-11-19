@@ -1,0 +1,48 @@
+syntax = "proto3";
+
+//package v1;
+
+option go_package = "github.com/suhanyujie/go_utils/pkg/common_interface_vendor/pb_interface/api/platform/service/v1;v1";
+
+// 集合、不好分类的一些 api
+service GameMixedSvc {
+  // 农场发送操作事件
+  rpc FarmEventPush(FarmEventPushReq) returns (FarmEventPushResp) {}
+  // 获取玩家拥有的 nft 列表
+  rpc GetUserNftList(GetUserNftListReq) returns (GetUserNftListResp) {}
+}
+
+message GetUserNftListReq {
+  // 玩家 id | @inject_tag: msgpack:"uid" json:"uid"
+  string uid = 1;
+}
+
+message GetUserNftListResp {
+  // 200: 成功；非 200 表示异常 | @inject_tag: msgpack:"code" json:"code"
+  int32 code = 1;
+  // 备注 | @inject_tag: msgpack:"message" json:"message"
+  string message = 2;
+  // 玩家拥有的 nft 列表 | @inject_tag: msgpack:"nftList" json:"nftList"
+  repeated Nft nftList = 3;
+}
+
+message Nft {
+  // nft id | @inject_tag: msgpack:"nftId" json:"nftId"
+  int32 nftId = 1;
+}
+
+message FarmEventPushReq {
+  // 用户的 uid | @inject_tag: msgpack:"uid" json:"uid"
+  string uid = 1;
+  // 类型（1：收获 2：种植 3：天灾人祸 4:开垦土地 5:购买礼包 6:与神秘商人交易）| @inject_tag: msgpack:"typ" json:"typ"
+  int32 typ = 2;
+  // 类型对应的值。eg:类型为6时，值就是交易的 gp 数 | @inject_tag: msgpack:"value" json:"value"
+  string value = 3;
+}
+
+message FarmEventPushResp {
+  // 200: 成功；非 200 表示异常 | @inject_tag: msgpack:"code" json:"code"
+  int32 code = 1;
+  // 备注 | @inject_tag: msgpack:"message" json:"message"
+  string message = 2;
+}

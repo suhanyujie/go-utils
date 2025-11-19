@@ -1,6 +1,6 @@
 package mymap
 
-import "github.com/suhanyujie/go-utils/helper/mystring"
+import "github.com/suhanyujie/go_utils/helper/mystring"
 
 // CaseCamelCopy 将 map 的下划线风格的键转换为小驼峰风格的键
 func CaseCamelCopy(data map[string]interface{}) map[string]interface{} {

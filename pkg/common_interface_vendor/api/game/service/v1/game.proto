@@ -1,0 +1,107 @@
+syntax = "proto3";
+
+// package game.service.v1;
+
+option go_package = "github.com/suhanyujie/go_utils/pkg/common_interface_vendor/pb_interface/api/game/service/v1;v1";
+
+service GameSvc {
+  // 创建对局
+  rpc CreateMatch(CreateMatchReq) returns (CreateMatchResp) {}
+  // 检查游戏对局是否能重连/重新进入。如果对局结束，则不能进入
+  rpc CheckCanReconnect(CheckCanReconnectReq) returns (CheckCanReconnectResp) {}
+  // 玩家投降，退出游戏
+  rpc PlayerExit(PlayerExitReq) returns (PlayerExitResp) {}
+}
+
+message CreateMatchReq {
+  // 游戏标识 | @inject_tag: msgpack:"gameId" json:"gameId"
+  int32 gameId = 1;
+  // 对局 id | @inject_tag: msgpack:"battleId" json:"battleId"
+  int32 battleId = 2;
+  // 模式 | @inject_tag: msgpack:"mode" json:"mode"
+  string mode = 3;
+  // 对局中，队伍的数量 | @inject_tag: msgpack:"teamNum" json:"teamNum"
+  int32 teamNum = 4;
+  // 每个队伍中，玩家的数量 | @inject_tag: msgpack:"playersPerTeam" json:"playersPerTeam"
+  int32 playersPerTeam = 5;
+  // 关卡 | @inject_tag: msgpack:"stage" json:"stage"
+  int32 stage = 6;
+  // 游戏的玩家信息 | @inject_tag: msgpack:"players" json:"players"
+  repeated CreateMatchReqPlayer players = 7;
+  // 对局难度，部分游戏支持 | @inject_tag: msgpack:"difficulty" json:"difficulty"
+  int32 difficulty = 8;
+  // 创建对局后，如果玩家未连接，等待一定秒数，游戏自动开始 | @inject_tag: msgpack:"timeout" json:"timeout"
+  int32 timeout = 9;
+  // 对局类型，0:pve，1:1v1，2:1vn，3:淘汰赛 | @inject_tag: msgpack:"gameType" json:"gameType"
+  GameType gameType = 10;
+}
+
+enum GameType {
+    GameTypePve = 0; // pve
+    GameTypePvP_1v1 = 1; // pvp 1v1
+    GameTypePvP_1vn = 2;// pvp 1vN
+    GameTypeKnock = 3; // 淘汰赛
+}
+
+message CreateMatchReqPlayer {
+  // 玩家 token | @inject_tag: msgpack:"token" json:"token"
+  string token = 1;
+  // 是否是机器人 | @inject_tag: msgpack:"isRobot" json:"isRobot"
+  bool isRobot  = 2;
+  // 机器人级别 | @inject_tag: msgpack:"robotLevel" json:"robotLevel"
+  int32 robotLevel  = 3;
+  // 玩家的 uid | @inject_tag: msgpack:"uid" json:"uid"
+  string uid = 4;
+  // 玩家的选择的 nft 列表 | @inject_tag: msgpack:"legends" json:"legends"
+  repeated string legends = 5;
+}
+
+message CommonResp {
+  // 200: 成功；非 200 表示异常 | @inject_tag: msgpack:"code" json:"code"
+  int32 code = 1;
+  // 备注 | @inject_tag: msgpack:"message" json:"message"
+  string message = 2;
+  // 数据 | @inject_tag: msgpack:"data" json:"data"
+  bytes data = 3;
+}
+
+message CreateMatchResp {
+  // 200: 成功；非 200 表示异常 | @inject_tag: msgpack:"code" json:"code"
+  int32 code = 1;
+  // 备注 | @inject_tag: msgpack:"message" json:"message"
+  string message = 2;
+  // 数据 | @inject_tag: msgpack:"data" json:"data"
+  bytes data = 3;
+}
+
+message CheckCanReconnectReq {
+  // 游戏标识 | @inject_tag: msgpack:"gameId" json:"gameId"
+  int32 gameId = 1;
+  // 对局 id | @inject_tag: msgpack:"battleId" json:"battleId"
+  int64 battleId = 2;
+}
+
+message CheckCanReconnectResp {
+  // 200: 成功；非 200 表示异常 | @inject_tag: msgpack:"code" json:"code"
+  int32 code = 1;
+  // 备注 | @inject_tag: msgpack:"message" json:"message"
+  string message = 2;
+  // 是否能重连 | @inject_tag: msgpack:"couldConn" json:"couldConn"
+  bool couldConn = 3;
+}
+
+message PlayerExitReq {
+  // 游戏标识 | @inject_tag: msgpack:"gameId" json:"gameId"
+  int32 gameId = 1;
+  // 对局 id | @inject_tag: msgpack:"battleId" json:"battleId"
+  int64 battleId = 2;
+  // 玩家 | @inject_tag: msgpack:"uid" json:"uid"
+  string uid = 3;
+}
+
+message PlayerExitResp {
+  // 200: 成功；非 200 表示异常 | @inject_tag: msgpack:"code" json:"code"
+  int32 code = 1;
+  // 备注 | @inject_tag: msgpack:"message" json:"message"
+  string message = 2;
+}

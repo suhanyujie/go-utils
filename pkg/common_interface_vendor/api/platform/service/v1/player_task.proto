@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+option go_package = "github.com/suhanyujie/go_utils/pkg/common_interface_vendor/pb_interface/api/platform/service/v1;v1";
+
+// 玩家任务系统
+service PlayerTaskSvc {
+  // 游戏调用平台，获取一个玩家的一批任务的完成情况
+  rpc QueryTasksState(QueryTasksStateReq) returns (QueryTasksStateResp) {}
+}
+
+message QueryTasksStateReq {
+  int32 gameId = 1;
+  string uid = 2;
+  // 任务 id 列表
+  repeated int32 taskIdArr = 3;
+}
+
+message QueryTasksStateResp {
+  // 200: 成功；非 200 表示异常
+  int32 code = 1;
+  string msg = 2;
+  // 任务id，对应的完成情况
+  map<string, bool> taskStateMap = 3;
+}

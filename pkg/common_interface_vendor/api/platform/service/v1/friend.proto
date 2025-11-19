@@ -1,0 +1,79 @@
+syntax = "proto3";
+
+option go_package = "github.com/suhanyujie/go_utils/pkg/common_interface_vendor/pb_interface/api/platform/service/v1;v1";
+
+// 好友关系
+service FriendSvc {
+  // 游戏调用平台，获取一个玩家与一批用户是否是好友关系
+  rpc CheckIsFriend(CheckIsFriendReq) returns (CheckIsFriendResp) {}
+  // 申请加好友
+  rpc AddFriend(AddFriendReq) returns (AddFriendResp) {}
+  // 获取某个玩家的好友列表
+  rpc GetFriendList(GetFriendListReq) returns (GetFriendListResp) {}
+}
+
+message GetFriendListReq {
+  // 查询的用户 id | @inject_tag: msgpack:"uid" json:"uid"
+  string uid = 1;
+  // 用于筛选玩过该游戏的好友。可选条件，-1 表示忽略该条件。 | @inject_tag: msgpack:"gameId" json:"gameId"
+  int32 gameId = 2;
+  // 最近 n 天登录过,-1为过滤此条件 | @inject_tag: msgpack:"loginInLatestDaysNum" json:"loginInLatestDaysNum"
+  int32 loginInLatestDaysNum = 3;
+}
+
+message GetFriendListResp {
+  // 200: 成功；非 200 表示异常 | @inject_tag: msgpack:"code" json:"code"
+  int32 code = 1;
+  // 备注 | @inject_tag: msgpack:"msg" json:"msg"
+  string msg = 2;
+  // 好友列表 | @inject_tag: msgpack:"list" json:"list"
+  repeated FriendItem list = 3;
+}
+
+message FriendItem {
+  // 好友用户的 uid | @inject_tag: msgpack:"uid" json:"uid"
+  string uid = 1;
+  // 玩家昵称 | @inject_tag: msgpack:"nickName" json:"nickName"
+  string nickName = 2;
+  // 玩家头像 | @inject_tag: msgpack:"avatar" json:"avatar"
+  string avatar = 3;
+  // 最后登录时间 | @inject_tag: msgpack:"lastLoginTime" json:"lastLoginTime"
+  int64 lastLoginTime = 4;
+}
+
+message CheckIsFriendReq {
+  // 自己的 uid  | @inject_tag: msgpack:"ownUid" json:"ownUid"
+  string ownUid = 1;
+  // 被检查的 uid 列表 | @inject_tag: msgpack:"otherUidList" json:"otherUidList"
+  repeated OtherUid otherUidList = 2;
+}
+
+message OtherUid {
+  // 玩家 uid | @inject_tag: msgpack:"uid" json:"uid"
+  string uid = 1;
+}
+
+message CheckIsFriendResp {
+  // 200: 成功；非 200 表示异常 | @inject_tag: msgpack:"code" json:"code"
+  int32 code = 1;
+  // 备注信息 | @inject_tag: msgpack:"msg" json:"msg"
+  string msg = 2;
+  // 是否是好友关系 map | @inject_tag: msgpack:"isFriendMap" json:"isFriendMap"
+  map<string, bool> isFriendMap = 3;
+}
+
+message AddFriendReq {
+  // 自己的 uid | @inject_tag: msgpack:"ownUid" json:"ownUid"
+  string ownUid = 1;
+  // 申请加好友的目标 uid | @inject_tag: msgpack:"targetUid" json:"targetUid"
+  string targetUid = 2;
+}
+
+message AddFriendResp {
+  // 200: 成功；非 200 表示异常 | @inject_tag: msgpack:"code" json:"code"
+  int32 code = 1;
+  // 备注信息 | @inject_tag: msgpack:"msg" json:"msg"
+  string msg = 2;
+  // 是否已申请 | @inject_tag: msgpack:"isOk" json:"isOk"
+  bool isOk = 3;
+}

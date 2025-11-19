@@ -1,0 +1,181 @@
+syntax = "proto3";
+
+//package v1;
+
+option go_package = "github.com/suhanyujie/go_utils/pkg/common_interface_vendor/pb_interface/api/platform/service/v1;v1";
+
+// 游戏交互相关 api
+service GameInteractionSvc {
+  // 消耗体力值
+  rpc ConsumeEnergy(ConsumeEnergyReq) returns (ConsumeEnergyResp) {}
+  // game over callback
+  rpc GameCallback(GameCallbackReq) returns (GameCallbackResp) {}
+  // game session callback
+  rpc GameSessCallback(GameSessCallbackReq) returns (GameSessCallbackResp) {}
+  // 淘汰赛 callback
+  rpc PvpKnockoutSettle(PvpKnockoutSettleReq) returns (PvpKnockoutSettleResp) {}
+  // pve 在同一 battleId 中进入下一关
+  rpc GamePveNext(GamePveNextReq) returns (GamePveNextResp) {}
+}
+
+message ConsumeEnergyReq {
+  // 游戏标识，eg:1跑酷 | @inject_tag: msgpack:"gameId" json:"gameId"
+  string gameId = 1;
+  // 关卡、难度级别的 id | @inject_tag: msgpack:"levelId" json:"levelId"
+  int64 levelId  = 2;
+  // 关卡、难度级别的 id | @inject_tag: msgpack:"needEnergy" json:"needEnergy"
+  int32 needEnergy  = 3;
+  // 玩家的 uid | @inject_tag: msgpack:"uid" json:"uid"
+  string uid  = 4;
+}
+
+message ConsumeEnergyResp {
+  // 200: 成功；非 200 表示异常 | @inject_tag: msgpack:"code" json:"code"
+  int32 code = 1;
+  // 备注 | @inject_tag: msgpack:"message" json:"message"
+  string message = 2;
+}
+
+message GameCallbackReq {
+  // 对局 id | @inject_tag: msgpack:"battleId" json:"battleId"
+  int64 battleId = 1;
+  // 结算时的玩家数据 | @inject_tag: msgpack:"playerRankReqDtoList" json:"playerRankReqDtoList"
+  repeated PlayerDtoListItem playerRankReqDtoList = 2;
+}
+
+message PlayerDtoListItem {
+  // 用户 id | @inject_tag: msgpack:"uid" json:"uid"
+  string uid = 1;
+  // 使用的 nft。考虑多 nftId 的情况？ | @inject_tag: msgpack:"nftId" json:"nftId"
+  int32 nftId = 2;
+  // 奖励系数 | @inject_tag: msgpack:"rewardCoefficient" json:"rewardCoefficient"
+  int32 rewardCoefficient = 3;
+  // 排名 | @inject_tag: msgpack:"rank" json:"rank"
+  int32 rank = 4;
+  // 关卡 | @inject_tag: msgpack:"stage" json:"stage"
+  int32 stage = 5;
+  // 进度。不同游戏对应的属性不同，可能是：波次，关卡，积分等 | @inject_tag: msgpack:"point" json:"point"
+  int32 point = 6;
+  // 获得的符文 map | @inject_tag: msgpack:"runes" json:"runes"
+  map<string, int32> runes = 7;
+  // 奖励的体力值 | @inject_tag: msgpack:"energy" json:"energy"
+  int32 energy = 8;
+  // 奖励的 GP | @inject_tag: msgpack:"token" json:"token"
+  string token = 9;
+  // 当前关卡消耗的体力值 | @inject_tag: msgpack:"consumeEnergy" json:"consumeEnergy"
+  int32 consumeEnergy = 10;
+  // 输赢状态。对于 uid，胜负状态。1胜利，2失败 | @inject_tag: msgpack:"winStatus" json:"winStatus"
+  int32 winStatus = 11;
+  // 对局时长，秒数 | @inject_tag: msgpack:"gameTimeSec" json:"gameTimeSec"
+  int32 gameTimeSec = 12;
+  // 难度。特殊的筛选条件,没有传0。
+  // 指定难度下，玩家最佳成绩 | @inject_tag: msgpack:"difficulty" json:"difficulty"
+  int32 difficulty = 13;
+}
+
+message GameCallbackResp {
+  // 200: 成功；非 200 表示异常 | @inject_tag: msgpack:"code" json:"code"
+  int32 code = 1;
+  // 备注 | @inject_tag: msgpack:"message" json:"message"
+  string message = 2;
+}
+
+message GameSessCallbackReq {
+  // 用户 id | @inject_tag: msgpack:"uid" json:"uid"
+  string uid = 1;
+  // 对局 id | @inject_tag: msgpack:"battleId" json:"battleId"
+  int64 battleId = 2;
+  // 奖励系数 | @inject_tag: msgpack:"rewardCoefficient" json:"rewardCoefficient"
+  float rewardCoefficient = 3;
+  // 是否获取推荐的场次信息 | @inject_tag: msgpack:"isRecommend" json:"isRecommend"
+  bool isRecommend = 4;
+  // 1v1 时的玩家排名；
+  int32 rank = 5;
+}
+
+message GameSessCallbackResp {
+  // 200: 成功；非 200 表示异常 | @inject_tag: msgpack:"code" json:"code"
+  int32 code = 1;
+  // 备注 | @inject_tag: msgpack:"message" json:"message"
+  string message = 2;
+  // 推荐场次信息相关数据 | @inject_tag: msgpack:"data" json:"data"
+  GameSessCallbackRespData data = 3;
+}
+
+message GameSessCallbackRespData {
+  // 游戏场 id | @inject_tag: msgpack:"lobbyId" json:"lobbyId"
+  int32 lobbyId = 1;
+  // 游戏标识 | @inject_tag: msgpack:"gameId" json:"gameId"
+  int32 gameId = 2;
+  // 游戏标识 | @inject_tag: msgpack:"mode" json:"mode"
+  string mode = 3;
+  // 游戏标识名 | @inject_tag: msgpack:"modeName" json:"modeName"
+  string modeName = 4;
+
+  // 推荐的场次的消耗类型，这里是门票 | @inject_tag: msgpack:"consumeType" json:"consumeType"
+  string consumeType = 5;
+  // 推荐的场次的门票数 | @inject_tag: msgpack:"consumeValue" json:"consumeValue"
+  string consumeValue = 6;
+  // 推荐的场次的奖励类型，这里是 token | @inject_tag: msgpack:"rewardType" json:"rewardType"
+  string rewardType = 7;
+  // 推荐的场次的奖品数值 | @inject_tag: msgpack:"rewardValue" json:"rewardValue"
+  string rewardValue = 8;
+  // 推荐的场次的图片 | @inject_tag: msgpack:"bannerImg" json:"bannerImg"
+  string bannerImg = 9;
+
+  // 当前玩家的任务进度信息 | @inject_tag: msgpack:"taskInfos" json:"taskInfos"
+  repeated TaskInfoItem taskInfos = 10;
+  // nft 对应的分数 | @inject_tag: msgpack:"score" json:"score"
+  int32 score = 11;
+  // 1v1 时玩家得到的 GP 奖励 | @inject_tag: msgpack:"reward" json:"reward"
+  string reward = 12;
+  // 与 gameId 对应，一款游戏的名字 | @inject_tag: msgpack:"gameName" json:"gameName"
+  string gameName = 13;
+}
+
+message TaskInfoItem {
+  // 任务文案 | @inject_tag: msgpack:"taskDetail" json:"taskDetail"
+  string taskDetail = 1;
+  // 已完成数量 | @inject_tag: msgpack:"goingNumber" json:"goingNumber"
+  string goingNumber = 2;
+  // 该任务的子任务总数 | @inject_tag: msgpack:"total" json:"total"
+  string total = 3;
+  // 任务是否完成 | @inject_tag: msgpack:"isCompleted" json:"isCompleted"
+  bool isCompleted = 4;
+}
+
+message PvpKnockoutSettleReq {
+  // 对局 id | @inject_tag: msgpack:"battleId" json:"battleId"
+  int64 battleId = 1;
+  // 用户 id，胜方 uid | @inject_tag: msgpack:"uid" json:"uid"
+  string uid = 2;
+  // 对手 uid，败方的 uid | @inject_tag: msgpack:"competitorId" json:"competitorId"
+  string competitorId = 3;
+  // 胜方对应的 nftId | @inject_tag: msgpack:"nftId" json:"nftId"
+  int64 nftId = 4;
+  // 败方对应的 nftId | @inject_tag: msgpack:"competitorNftId" json:"competitorNftId"
+  int64 competitorNftId = 5;
+}
+
+message PvpKnockoutSettleResp {
+  // 200: 成功；非 200 表示异常 | @inject_tag: msgpack:"code" json:"code"
+  int32 code = 1;
+  // 备注 | @inject_tag: msgpack:"message" json:"message"
+  string message = 2;
+}
+
+message GamePveNextReq {
+  // 对局 id | @inject_tag: msgpack:"battleId" json:"battleId"
+  int64 battleId = 1;
+}
+
+message GamePveNextResp {
+  // 200: 成功；非 200 表示异常 | @inject_tag: msgpack:"code" json:"code"
+  int32 code = 1;
+  // 备注 | @inject_tag: msgpack:"message" json:"message"
+  string message = 2;
+}
+
+
+
+

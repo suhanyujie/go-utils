@@ -1,0 +1,230 @@
+syntax = "proto3";
+
+option go_package = "github.com/suhanyujie/go_utils/pkg/common_interface_vendor/pb_interface/api/platform/service/v1;v1";
+
+// 用户对局相关
+service PlayerBattleSvc {
+  // 获取用户当前对战信息，对战的游戏，和 battleId
+  rpc GetUserBattleInfo(GetUserBattleInfoReq) returns (GetUserBattleInfoResp) {}
+  // 查询好友的历史最高对战记录
+  rpc GetBestRecordOfFriendBattle(GetBestRecordOfFriendBattleReq) returns (GetBestRecordOfFriendBattleResp) {}
+  // 获取nft出场率排行相关数据
+  rpc GetNftTopNInfo(GetNftTopNInfoReq) returns (GetNftTopNInfoResp) {}
+  // 根据当前成绩获取超越玩家的百分比(跑酷)
+  rpc GetSurpassRateByScore(GetSurpassRateByScoreReq) returns (GetSurpassRateByScoreResp) {}
+  // 获得各种符文的记录在所有对局记录里的占比（包括未获得记录条）（捕鱼)
+  rpc GetRuneRate(GetRuneRateReq) returns (GetRuneRateResp) {}
+  // pvp,战胜对手NFT最多次数的NFT角色
+  rpc GetDefeatNftTopNInfo(GetDefeatNftTopNInfoReq) returns (GetDefeatNftTopNInfoResp) {}
+  // 查询好友是否在一个游戏中使用过某几个 nft todo
+  rpc GetInfoOfFriendHasUsingNft(GetInfoOfFriendHasUsingNftReq) returns (GetInfoOfFriendHasUsingNftResp) {}
+  // 查询 nft 的使用率信息
+  rpc GetNftUsingRateInfo(GetNftUsingRateInfoReq) returns (GetNftUsingRateInfoResp) {}
+}
+
+message GetBestRecordOfFriendBattleReq {
+  // 游戏标识 | @inject_tag: msgpack:"gameId" json:"gameId"
+  int32 gameId = 1;
+  // 关卡。忽略该条件传 -1。
+  // 查询的是指定关卡下，时间最短 topN 的对战记录
+  // | @inject_tag: msgpack:"levelId" json:"levelId"
+  int32 levelId = 2;
+  // 难度。特殊的筛选条件。忽略该条件传 0
+  // 指定难度下，玩家最佳成绩 | @inject_tag: msgpack:"difficulty" json:"difficulty"
+  int32 difficulty = 3;
+  // 玩家的 uid 列表，查询这些玩家的最高成绩的对战记录 | @inject_tag: msgpack:"uidList" json:"uidList"
+  repeated UidWrapper uidList = 4;
+}
+
+message UidWrapper {
+  // 玩家的 uid | @inject_tag: msgpack:"uid" json:"uid"
+  string uid = 1;
+}
+
+message NftIdWrapper {
+  // 角色对应的 nftId | @inject_tag: msgpack:"nftId" json:"nftId"
+  int32 nftId = 1;
+}
+
+message GetBestRecordOfFriendBattleResp {
+  // 200: 成功；非 200 表示异常 | @inject_tag: msgpack:"code" json:"code"
+  int32 code = 1;
+  // 异常时错误信息 | @inject_tag: msgpack:"msg" json:"msg"
+  string msg = 2;
+  // 好友对战记录列表 | @inject_tag: msgpack:"list" json:"list"
+  repeated BattleRecordOfFriend list = 3;
+}
+
+message BattleRecordOfFriend {
+  // 玩家 id | @inject_tag: msgpack:"uid" json:"uid"
+  string uid = 1;
+  // 玩家所使用的 nftId | @inject_tag: msgpack:"nftId" json:"nftId"
+  int32 nftId = 2;
+  // 对局成绩，关卡id/分数/距离 | @inject_tag: msgpack:"grade" json:"grade"
+  string grade = 3;
+  // 对局时间的秒数 | @inject_tag: msgpack:"battleSec" json:"battleSec"
+  int32 battleSec = 4;
+}
+
+message GetUserBattleInfoReq {
+  // 用户的 id | @inject_tag: msgpack:"uid" json:"uid"
+  string uid = 1;
+}
+
+message GetUserBattleInfoResp {
+  // 200: 成功；非 200 表示异常 | @inject_tag: msgpack:"code" json:"code"
+  int32 code = 1;
+  // 异常时错误信息 | @inject_tag: msgpack:"msg" json:"msg"
+  string msg = 2;
+  // 当前对战的游戏，游戏的标识，如果没有，则为 0 | @inject_tag: msgpack:"gameId" json:"gameId"
+  int32 gameId = 3;
+  // 当前对战的 battleId，如果没有则为 0 | @inject_tag: msgpack:"battleId" json:"battleId"
+  int64 battleId = 4;
+}
+
+message GetNftTopNInfoReq {
+  // 游戏标识 | @inject_tag: msgpack:"gameId" json:"gameId"
+  int32 gameId = 1;
+  // 关卡。忽略该条件传 -1。
+  // 查询的是指定关卡下，通过关卡，且时间最短 topN 的对战记录
+  // | @inject_tag: msgpack:"levelId" json:"levelId"
+  int32 levelId = 2;
+  // 难度。特殊的筛选条件,没有传0。
+  // 指定难度下，玩家最佳成绩 | @inject_tag: msgpack:"difficulty" json:"difficulty"
+  int32 difficulty = 3;
+  // 奖励类型(符文)，没有传-1
+  // 指定奖励类型下的常用角色，和在这个阶段的占比（捕鱼） | @inject_tag: msgpack:"rewardType" json:"rewardType"
+  int32 rewardType = 4;
+  // 名次 | @inject_tag: msgpack:"rank" json:"rank"
+  int32 rank = 6;
+  // 玩家成绩 | @inject_tag: msgpack:"score" json:"score"
+  int32 score = 7;
+}
+
+message GetNftTopNInfoResp {
+  // 200: 成功；非 200 表示异常 | @inject_tag: msgpack:"code" json:"code"
+  int32 code = 1;
+  // 异常时错误信息 | @inject_tag: msgpack:"msg" json:"msg"
+  string msg = 2;
+  // nft信息 | @inject_tag: msgpack:"nftList" json:"nftList"
+  repeated NtfSimpleInfo nftList = 3;
+}
+
+message NtfSimpleInfo {
+  // nftId | @inject_tag: msgpack:"nftId" json:"nftId"
+  int32 nftId = 1;
+  // 使用率，百分比 | @inject_tag: msgpack:"rate" json:"rate"
+  int32 rate = 2;
+}
+
+message GetSurpassRateByScoreReq {
+  // 游戏标识 | @inject_tag: msgpack:"gameId" json:"gameId"
+  int32 gameId = 1;
+  // 关卡。忽略该条件传 -1。
+  // 查询的是指定关卡下，时间最短 topN 的对战记录
+  // | @inject_tag: msgpack:"levelId" json:"levelId"
+  int32 levelId = 2;
+  // 难度。特殊的筛选条件。
+  // 指定难度下，玩家最佳成绩 | @inject_tag: msgpack:"difficulty" json:"difficulty"
+  int32 difficulty = 3;
+  // 玩家成绩 | @inject_tag: msgpack:"score" json:"score"
+  int32 score = 4;
+}
+
+message GetSurpassRateByScoreResp {
+  // 200: 成功；非 200 表示异常 | @inject_tag: msgpack:"code" json:"code"
+  int32 code = 1;
+  // 异常时错误信息 | @inject_tag: msgpack:"msg" json:"msg"
+  string msg = 2;
+  // 百分比 | @inject_tag: msgpack:"rate" json:"rate"
+  int32 rate = 3;
+}
+
+message GetRuneRateReq {
+  // 游戏标识 | @inject_tag: msgpack:"gameId" json:"gameId"
+  int32 gameId = 1;
+}
+
+message RuneRate{
+  // 奖励符文类型，没获得符文-1 | @inject_tag: msgpack:"runeType" json:"runeType"
+  int32 runeType = 1;
+  // 获取占比 | @inject_tag: msgpack:"rate" json:"rate"
+  int32 rate = 2;
+}
+
+message GetRuneRateResp {
+  // 200: 成功；非 200 表示异常 | @inject_tag: msgpack:"code" json:"code"
+  int32 code = 1;
+  // 异常时错误信息 | @inject_tag: msgpack:"msg" json:"msg"
+  string msg = 2;
+  // 符文获取占比 | @inject_tag: msgpack:"runeRates" json:"runeRates"
+  repeated RuneRate runeRates = 3;
+}
+
+message GetDefeatNftTopNInfoReq{
+  // 游戏标识 | @inject_tag: msgpack:"gameId" json:"gameId"
+  int32 gameId = 1;
+  // nftID | @inject_tag: msgpack:"nftId" json:"nftId"
+  int32 nftId = 2;
+  // 前几名 | @inject_tag: msgpack:"top" json:"top"
+  int32 top = 6;
+}
+
+message DefeatRate{
+  // nftID | @inject_tag: msgpack:"nftId" json:"nftId"
+  int32 nftId = 1;
+  // 占比 | @inject_tag: msgpack:"rate" json:"rate"
+  int32 rate = 2;
+  // 名次 | @inject_tag: msgpack:"rank" json:"rank"
+  int32 rank = 3;
+}
+
+message GetDefeatNftTopNInfoResp{
+  // 200: 成功；非 200 表示异常 | @inject_tag: msgpack:"code" json:"code"
+  int32 code = 1;
+  // 异常时错误信息 | @inject_tag: msgpack:"msg" json:"msg"
+  string msg = 2;
+  // 战胜nft的nft信息 | @inject_tag: msgpack:"defeatRates" json:"defeatRates"
+  repeated DefeatRate defeatRates = 3;
+}
+
+message GetInfoOfFriendHasUsingNftReq {
+  // 游戏标识 | @inject_tag: msgpack:"gameId" json:"gameId"
+  int32 gameId = 1;
+  // 指定的 uid 列表，这些 uid 是否使用过这些 nft | @inject_tag: msgpack:"uid" json:"uid"
+  repeated UidWrapper uidList = 2;
+  // nftId 列表，好友(uid 对应的好友)是否用过这些 nft | @inject_tag: msgpack:"nftIdList" json:"nftIdList"
+  repeated NftIdWrapper nftIdList = 3;
+}
+
+message GetInfoOfFriendHasUsingNftResp {
+  // 200: 成功；非 200 表示异常 | @inject_tag: msgpack:"code" json:"code"
+  int32 code = 1;
+  // 异常时错误信息 | @inject_tag: msgpack:"msg" json:"msg"
+  string msg = 2;
+  // 哪些 nft 被好友使用过。key:nftId, val:被哪些好友使用过 | @inject_tag: msgpack:"usingInfoMap" json:"usingInfoMap"
+  map<int32, FriendUidListOfUsingNft> usingInfoMap = 3;
+}
+
+message FriendUidListOfUsingNft {
+  // 好友的 uid 列表 | @inject_tag: msgpack:"uidList" json:"uidList"
+  repeated UidWrapper uidList = 1;
+}
+
+message GetNftUsingRateInfoReq {
+  // 指定的游戏，eg：角斗，跑酷 etc | @inject_tag: msgpack:"gameId" json:"gameId"
+  int32 gameId = 1;
+  // 指定的关卡 | @inject_tag: msgpack:"levelId" json:"levelId"
+  int32 levelId = 2;
+  // 指定的 nft id 列表 | @inject_tag: msgpack:"nftIdList" json:"nftIdList"
+  repeated NftIdWrapper nftIdList = 3;
+}
+
+message GetNftUsingRateInfoResp {
+  // 200: 成功；非 200 表示异常 | @inject_tag: msgpack:"code" json:"code"
+  int32 code = 1;
+  // 异常时错误信息 | @inject_tag: msgpack:"msg" json:"msg"
+  string msg = 2;
+  // 指定的 nft 使用率信息 map | @inject_tag: msgpack:"nftUsingRateMap" json:"nftUsingRateMap"
+  map<int32, int32> nftUsingRateMap = 3;
+}

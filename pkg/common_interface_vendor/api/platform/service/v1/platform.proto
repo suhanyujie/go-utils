@@ -1,0 +1,155 @@
+syntax = "proto3";
+
+//package v1;
+
+option go_package = "github.com/suhanyujie/go_utils/pkg/common_interface_vendor/pb_interface/api/platform/service/v1;v1";
+
+// 道具交易
+service PropTradeSvc {
+  // 游戏调用平台，消费“通用道具”
+  rpc ConsumeProp(ConsumePropReq) returns (ConsumePropResp) {}
+  // 查询游戏道具
+  rpc QueryProp(QueryPropReq) returns (QueryPropResp) {}
+  // 给玩家增加道具
+  rpc AddProp(AddPropReq) returns (AddPropResp) {}
+  // 查询订单状态
+  rpc QueryOrderStatus(QueryOrderStatusReq) returns (QueryOrderStatusResp) {}
+  // 创建一个新的礼包商品
+  rpc CreateOneGoods(CreateOneGoodsReq) returns (CreateOneGoodsResp) {}
+  // 订单校验。用于验证法币支付的订单
+  rpc VerifyPayOrder(VerifyPayOrderReq) returns (VerifyPayOrderResp) {}
+  // 针对法币支付的订单的发货/交付
+  rpc OrderDeliver(OrderDeliverReq) returns (OrderDeliverResp) {}
+}
+
+message ConsumePropReq {
+  // 游戏标识 | @inject_tag: msgpack:"gameId" json:"gameId"
+  int32 gameId = 1;
+  // 使用道具的玩家 uid | @inject_tag: msgpack:"uid" json:"uid"
+  string uid = 2;
+  // 使用道具的类型 | @inject_tag: msgpack:"propId" json:"propId"
+  int64 propId = 3;
+  // 使用道具的数量 | @inject_tag: msgpack:"num" json:"num"
+  int32 num = 4;
+  // 所在对局 | @inject_tag: msgpack:"battleId" json:"battleId"
+  int64 battleId = 5;
+}
+
+message ConsumePropResp {
+  // 200: 成功；非 200 表示异常 | @inject_tag: msgpack:"code" json:"code"
+  int32 code = 1;
+  // 使用后，该道具的剩余数量 | @inject_tag: msgpack:"resNum" json:"resNum"
+  int32 resNum = 2;
+  // 备注 | @inject_tag: msgpack:"message" json:"message"
+  string message = 3;
+}
+
+message QueryPropReq {
+  // 游戏 id，游戏标识 | @inject_tag: msgpack:"gameId" json:"gameId"
+  int32 gameId = 1;
+  // 玩家 uid | @inject_tag: msgpack:"uid" json:"uid"
+  string uid = 2;
+}
+
+message QueryPropResp {
+  // 200: 成功；非 200 表示异常 | @inject_tag: msgpack:"code" json:"code"
+  int32 code = 1;
+  // 备注 | @inject_tag: msgpack:"msg" json:"msg"
+  string msg = 2;
+  // 道具的数量信息 | @inject_tag: msgpack:"propInfo" json:"propInfo"
+  map<int64, int32> propInfo = 3;
+}
+
+message QueryOrderStatusReq {
+  // 游戏标识 | @inject_tag: msgpack:"gameId" json:"gameId"
+  int32 gameId = 1;
+  // 查询的订单号 | @inject_tag: msgpack:"orderNum" json:"orderNum"
+  string orderNum = 2;
+}
+
+message QueryOrderStatusResp {
+  // 200: 成功；非 200 表示异常 | @inject_tag: msgpack:"code" json:"code"
+  int32 code = 1;
+  // 备注 | @inject_tag: msgpack:"msg" json:"msg"
+  string msg = 2;
+  // 订单状态 | @inject_tag: msgpack:"status" json:"status"
+  OrderStatus status = 3;
+}
+
+// 订单状态，平台可根据订单需求，进行增减
+enum OrderStatus {
+  // 查不到此订单
+  OrderEmpty_Status = 0;
+  // 支付中
+  OrderCreate = 1;
+  // 支付成功
+  OrderPaySuccess = 2;
+  // 支付失败
+  OrderPayFailed = 3;
+}
+
+message CreateOneGoodsReq {
+  // 礼包价位 | @inject_tag: msgpack:"price" json:"price"
+  float price = 1;
+  // 礼包商品标识，like:`{"props": {"1": 5, "2": 5, "3": 1, "10001": 1}}` | @inject_tag: msgpack:"goodsDetail" json:"goodsDetail"
+  string goodsDetail = 2;
+}
+
+message CreateOneGoodsResp {
+  // 200: 成功；非 200 表示异常 | @inject_tag: msgpack:"code" json:"code"
+  int32 code = 1;
+  // 备注 | @inject_tag: msgpack:"msg" json:"msg"
+  string msg = 2;
+  // 礼包商品的 id | @inject_tag: msgpack:"skuId" json:"skuId"
+  string skuId = 3;
+}
+
+message AddPropReq {
+  // 游戏标识 | @inject_tag: msgpack:"gameId" json:"gameId"
+  int32 gameId = 1;
+  // 增加的道具信息 | @inject_tag: msgpack:"addMap" json:"addMap"
+  map<int64, int32> addMap = 2;
+  // 玩家 uid | @inject_tag: msgpack:"uid" json:"uid"
+  string uid = 3;
+}
+
+message AddPropResp {
+  // 200: 成功；非 200 表示异常 | @inject_tag: msgpack:"code" json:"code"
+  int32 code = 1;
+  // 备注 | @inject_tag: msgpack:"msg" json:"msg"
+  string msg = 2;
+  // 道具信息 | @inject_tag: msgpack:"propInfo" json:"propInfo"
+  map<int64, int32> propInfo = 3;
+}
+
+message VerifyPayOrderReq {
+  // 游戏标识 | @inject_tag: msgpack:"gameId" json:"gameId"
+  int32 gameId = 1;
+  // 使用道具的玩家 uid | @inject_tag: msgpack:"uid" json:"uid"
+  string uid = 2;
+  // 订单标识 | @inject_tag: msgpack:"orderNum" json:"orderNum"
+  string orderNum = 3;
+}
+
+message VerifyPayOrderResp {
+  // 200: 成功；非 200 表示异常 | @inject_tag: msgpack:"code" json:"code"
+  int32 code = 1;
+  // 备注 | @inject_tag: msgpack:"msg" json:"msg"
+  string msg = 2;
+}
+
+message OrderDeliverReq {
+  // 游戏标识 | @inject_tag: msgpack:"gameId" json:"gameId"
+  int32 gameId = 1;
+  // 使用道具的玩家 uid | @inject_tag: msgpack:"uid" json:"uid"
+  string uid = 2;
+  // 订单标识 | @inject_tag: msgpack:"orderNum" json:"orderNum"
+  string orderNum = 3;
+}
+
+message OrderDeliverResp {
+  // 200: 成功；非 200 表示异常 | @inject_tag: msgpack:"code" json:"code"
+  int32 code = 1;
+  // 备注 | @inject_tag: msgpack:"msg" json:"msg"
+  string msg = 2;
+}

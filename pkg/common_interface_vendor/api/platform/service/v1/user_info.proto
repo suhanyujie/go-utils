@@ -1,0 +1,46 @@
+syntax = "proto3";
+
+// 用户信息相关 api
+//package v1;
+
+option go_package = "github.com/suhanyujie/go_utils/pkg/common_interface_vendor/pb_interface/api/platform/service/v1;v1";
+
+service UserInfoSvc {
+  // 获取用户信息
+  rpc GetUserInfo(GetUserInfoReq) returns (GetUserInfoResp) {}
+}
+
+message GetUserInfoReq {
+  // 用户 token | @inject_tag: msgpack:"token" json:"token"
+  string token = 1;
+}
+
+message GetUserInfoResp {
+  // 200: 成功；非 200 表示异常 | @inject_tag: msgpack:"code" json:"code"
+  int32 code = 1;
+  // 备注 | @inject_tag: msgpack:"message" json:"message"
+  string message = 2;
+  // 用户 id | @inject_tag: msgpack:"data" json:"data"
+  GetUserInfoRespData data = 3;
+}
+
+message GetUserInfoRespData {
+  // 用户 id | @inject_tag: msgpack:"uid" json:"uid"
+  string uid = 1;
+  // 用户名称 | @inject_tag: msgpack:"userName" json:"userName"
+  string userName = 2;
+  // 用户头像  | @inject_tag: msgpack:"avatar" json:"avatar"
+  string avatar = 3;
+  // 用户的 gp 数，代币数 | @inject_tag: msgpack:"token" json:"token"
+  float token = 4;
+  // 符文背包 | @inject_tag: msgpack:"runeBox" json:"runeBox"
+  RuneBox runeBox = 5;
+}
+
+message RuneBox {
+  // 已装备的符文格子数 | @inject_tag: msgpack:"slot" json:"slot"
+  int32 slot = 1;
+  // 已解锁的符文格子上限 | @inject_tag: msgpack:"slotMax" json:"slotMax"
+  int32 slotMax = 2;
+}
+
