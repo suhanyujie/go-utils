@@ -9,7 +9,7 @@ import (
 	"github.com/suhanyujie/go_utils/helper/mymap"
 	"github.com/suhanyujie/go_utils/helper/mystring"
 	"github.com/suhanyujie/go_utils/helper/slicex"
-	"github.com/suhanyujie/go_utils/libs/jsonx"
+	"github.com/suhanyujie/go_utils/jsonx"
 	"golang.org/x/text/language"
 	"golang.org/x/text/message"
 	"math"
@@ -243,7 +243,7 @@ func TestJsonToInterface1(t *testing.T) {
 func TestJsonToArr1(t *testing.T) {
 	json1 := `["24362", 24422, 1007]`
 	arr := make([]int64, 0)
-	jsonx.FromJsonWithNumber(json1, &arr) // bad case
+	jsonx.FromJson(json1, &arr) // bad case
 	t.Log(jsonx.ToJsonIgnoreErr(arr))
 	// good:
 	arr2 := make([]interface{}, 0)
